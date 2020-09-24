@@ -5,9 +5,8 @@ Version:	2.8
 Release:	1%{?dist}
 Summary:	Configure accelerator subsystem devices
 License:	GPLv2
-Group:		System Environment/Base
 URL:		https://github.com/intel/%{project_name}
-Source0:	https://github.com/intel/%{project_name}/archive/%{name}-v%{version}.tar.gz
+Source0:	%{URL}/archive/%{name}-v%{version}.tar.gz
 
 Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 BuildRequires:	autoconf
@@ -32,7 +31,6 @@ Utility library for configuring the accelerator subsystem.
 %package -n %{name}-devel
 Summary:	Development files for libaccfg
 License:	LGPLv2
-Group:		Development/Libraries
 Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 
 %description -n %{name}-devel
@@ -43,7 +41,6 @@ developing applications that use %{name}.
 %package -n %{name}-libs
 Summary:	Configuration library for accelerator subsystem devices
 License:	LGPLv2
-Group:		System Environment/Libraries
 
 %description -n %{name}-libs
 Libraries for %{name}.
@@ -51,7 +48,6 @@ Libraries for %{name}.
 %package -n %{name}-test
 Summary:	Unit tests for %{name}.
 License:	GPLv2
-Group:		Unspecified
 
 %description -n %{name}-test
 Unit tests for %{name}
@@ -63,7 +59,7 @@ Unit tests for %{name}
 echo %{version} > version
 ./autogen.sh
 %configure --disable-static --disable-silent-rules --enable-test
-make %{?_smp_mflags}
+%make_build
 
 %install
 %make_install
@@ -95,5 +91,5 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_datadir}/%{name}/test/*
 
 %changelog
-* Wed Sep 23 2020 Yunying Sun <yunying.sun@intel.com> - 2.8-1
+* Thu Sep 24 2020 Yunying Sun <yunying.sun@intel.com> - 2.8-1
 - Initial Packaging
