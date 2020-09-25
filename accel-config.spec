@@ -45,20 +45,13 @@ License:	LGPLv2
 %description -n %{name}-libs
 Libraries for %{name}.
 
-%package -n %{name}-test
-Summary:	Unit tests for %{name}.
-License:	GPLv2
-
-%description -n %{name}-test
-Unit tests for %{name}
-
 %prep
 %autosetup -n %{project_name}-%{name}-v%{version}
 
 %build
 echo %{version} > version
 ./autogen.sh
-%configure --disable-static --disable-silent-rules --enable-test
+%configure --disable-static --disable-silent-rules
 %make_build
 
 %install
@@ -86,10 +79,6 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/lib%{name}.so
 %{_libdir}/pkgconfig/lib%{name}.pc
 
-%files -n %{name}-test
-%license Documentation/COPYING
-%{_datadir}/%{name}/test/*
-
 %changelog
-* Thu Sep 24 2020 Yunying Sun <yunying.sun@intel.com> - 2.8-1
+* Fri Sep 25 2020 Yunying Sun <yunying.sun@intel.com> - 2.8-1
 - Initial Packaging
