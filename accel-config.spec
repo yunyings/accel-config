@@ -4,11 +4,15 @@ Name:		accel-config
 Version:	2.8
 Release:	1%{?dist}
 Summary:	Configure accelerator subsystem devices
-License:	GPLv2
+# The entire source code is under GPLv2 except for accel-config
+# library which is mostly LGPLv2, ccan/list which is BSD-MIT and
+# the rest of ccan which is CC0.
+License:	GPLv2 and LGPLv2 and BSD-MIT and CC0
 URL:		https://github.com/intel/%{project_name}
 Source0:	%{URL}/archive/%{name}-v%{version}.tar.gz
 
 Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
+BuildRequires:	gcc
 BuildRequires:	autoconf
 BuildRequires:	asciidoc
 BuildRequires:	xmlto
@@ -28,21 +32,24 @@ ExclusiveArch:	%{ix86} x86_64
 %description
 Utility library for configuring the accelerator subsystem.
 
-%package -n %{name}-devel
+%package devel
 Summary:	Development files for libaccfg
 License:	LGPLv2
 Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
 
-%description -n %{name}-devel
+%description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 
-%package -n %{name}-libs
+%package libs
 Summary:	Configuration library for accelerator subsystem devices
-License:	LGPLv2
+# All source code of configuration library is LGPLv2, except
+# ccan/list which is BSD-MIT and the rest of ccan/ which is CC0.
+License:	LGPLv2 and BSD-MIT and CC0
+Requires:	%{name}%{?_isa} = %{version}-%{release}
 
-%description -n %{name}-libs
+%description libs
 Libraries for %{name}.
 
 %prep
@@ -58,9 +65,8 @@ echo %{version} > version
 %make_install
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
-%post -n %{name}-libs -p /sbin/ldconfig
-
-%postun -n %{name}-libs -p /sbin/ldconfig
+%check
+make check
 
 %files
 %license Documentation/COPYING licenses/BSD-MIT licenses/CC0
@@ -68,17 +74,17 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_mandir}/man1/%{name}*
 %{_sysconfdir}/%{name}/%{name}.conf.sample
 
-%files -n %{name}-libs
+%files libs
 %doc README.md
 %license Documentation/COPYING licenses/BSD-MIT licenses/CC0
 %{_libdir}/lib%{name}.so.*
 
-%files -n %{name}-devel
+%files devel
 %license Documentation/COPYING
 %{_includedir}/%{name}/
 %{_libdir}/lib%{name}.so
 %{_libdir}/pkgconfig/lib%{name}.pc
 
 %changelog
-* Fri Sep 25 2020 Yunying Sun <yunying.sun@intel.com> - 2.8-1
+* Mon Oct 19 2020 Yunying Sun <yunying.sun@intel.com> - 2.8-1
 - Initial Packaging
